@@ -8,7 +8,7 @@ import numpy as np
 from flask import Blueprint, current_app, jsonify, request
 from PIL import Image, UnidentifiedImageError
 
-from app import limiter
+from app.extensions import limiter
 from app.utils.logger import log
 
 bp = Blueprint("api", __name__)

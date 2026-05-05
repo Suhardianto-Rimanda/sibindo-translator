@@ -1,25 +1,18 @@
-import os
+def create_app(config_class=None):
+    import os
 
-from flask import Flask, jsonify
-from flask_cors import CORS
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+    from flask import Flask, jsonify
+    from flask_cors import CORS
 
-from config import Config, _DEV_SECRET_KEY
-from app.pipeline import Pipeline
-from app.utils.audio_cleanup import start_cleanup_thread
-from app.utils.logger import log
+    from config import Config, _DEV_SECRET_KEY
+    from app.extensions import limiter
+    from app.pipeline import Pipeline
+    from app.utils.audio_cleanup import start_cleanup_thread
+    from app.utils.logger import log
 
+    if config_class is None:
+        config_class = Config
 
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[Config.RATE_LIMIT_DEFAULT],
-    headers_enabled=True,
-    storage_uri="memory://",
-)
-
-
-def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
