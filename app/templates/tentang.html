@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Tentang — SiBindo{% endblock %}
+
+{% block content %}
+<div class="prose-page">
+    <div class="prose-card">
+        <h2>Tentang SiBindo</h2>
+        <p>
+            <strong>SiBindo Translator</strong> adalah purwarupa sistem penerjemah Bahasa Isyarat Indonesia
+            (BISINDO) berbasis webcam yang dikembangkan sebagai Tugas Akhir Program Studi D-III Teknik
+            Informatika, Politeknik Negeri Bengkalis. Tujuannya: menjembatani kesenjangan komunikasi
+            antara penyandang tunarungu dan masyarakat dengar melalui Computer Vision dan Deep Learning.
+        </p>
+
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-label">Penulis</div>
+                <div class="info-card-value">Suhardianto Rimanda</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">NIM</div>
+                <div class="info-card-value" style="font-family:var(--font-mono);font-size:12px">6103230046</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Pembimbing</div>
+                <div class="info-card-value" style="font-size:12px">Afis Julianto, S.Kom, M.Kom</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-label">Institusi</div>
+                <div class="info-card-value" style="font-size:12px">Politeknik Negeri Bengkalis</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="prose-card">
+        <h2>Arsitektur Sistem</h2>
+        <p>Sistem mengadopsi pendekatan <em>Two-Stage Detection System</em> — setiap frame webcam melewati lima tahap pemrosesan secara berurutan.</p>
+
+        <div class="arch-flow">
+            <div class="arch-step">
+                <div class="arch-num">1</div>
+                <div class="arch-name">YOLOv8</div>
+                <div class="arch-desc">Deteksi Region of Interest (bounding box penutur/tangan)</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-step">
+                <div class="arch-num">2</div>
+                <div class="arch-name">MediaPipe</div>
+                <div class="arch-desc">Ekstraksi 21 landmark tangan × 3D × 2 tangan = 126 fitur per frame</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-step">
+                <div class="arch-num">3</div>
+                <div class="arch-name">Normalizer</div>
+                <div class="arch-desc">Translasi wrist-relative + scale invariance (invariant terhadap posisi &amp; jarak kamera)</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-step">
+                <div class="arch-num">4</div>
+                <div class="arch-name">LSTM</div>
+                <div class="arch-desc">Klasifikasi sekuensi 30 frame → label kata dengan skor confidence</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-step">
+                <div class="arch-num">5</div>
+                <div class="arch-name">NLP rule-based</div>
+                <div class="arch-desc">Smoothing (3× konsekutif), dedup, sliding window 30 kata → kalimat</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-step">
+                <div class="arch-num">6</div>
+                <div class="arch-name">gTTS</div>
+                <div class="arch-desc">Konversi teks → suara (Bahasa Indonesia) untuk komunikasi dua arah</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="prose-card">
+        <h2>Teknologi</h2>
+        <div class="tech-list">
+            <span class="tech-pill">Python 3.12</span>
+            <span class="tech-pill">Flask</span>
+            <span class="tech-pill">TensorFlow 2.x</span>
+            <span class="tech-pill">Ultralytics YOLOv8</span>
+            <span class="tech-pill">MediaPipe Tasks API</span>
+            <span class="tech-pill">OpenCV</span>
+            <span class="tech-pill">NumPy</span>
+            <span class="tech-pill">scikit-learn</span>
+            <span class="tech-pill">gTTS</span>
+            <span class="tech-pill">Flask-Limiter</span>
+            <span class="tech-pill">Docker</span>
+            <span class="tech-pill">Gunicorn</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

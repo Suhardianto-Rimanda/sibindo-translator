@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Penerjemah — SiBindo{% endblock %}
+
+{% block content %}
+<!-- Pipeline Indicator -->
+<div class="pipeline-bar">
+    <div class="pipeline-stage" id="stage-yolo">
+        <div class="stage-dot"></div>
+        <span>YOLOv8</span>
+    </div>
+    <div class="pipeline-arrow"></div>
+    <div class="pipeline-stage" id="stage-mp">
+        <div class="stage-dot"></div>
+        <span>MediaPipe</span>
+    </div>
+    <div class="pipeline-arrow"></div>
+    <div class="pipeline-stage" id="stage-lstm">
+        <div class="stage-dot"></div>
+        <span>LSTM</span>
+    </div>
+    <div class="pipeline-arrow"></div>
+    <div class="pipeline-stage" id="stage-nlp">
+        <div class="stage-dot"></div>
+        <span>NLP</span>
+    </div>
+    <div class="pipeline-arrow"></div>
+    <div class="pipeline-stage" id="stage-tts">
+        <div class="stage-dot"></div>
+        <span>gTTS</span>
+    </div>
+</div>
+
+<!-- Main Layout -->
+<section class="main-grid">
+
+    <!-- ─── Video Panel ─── -->
+    <div class="video-panel">
+        <div class="panel-header">
+            <span class="panel-label">Input Kamera</span>
+            <span id="latencyBadge" class="latency-badge">— ms</span>
+        </div>
+
+        <div class="video-wrap">
+            <video id="webcam" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div id="placeholder" class="placeholder">
+                <div class="placeholder-inner">
+                    <div class="scan-rings">
+                        <div class="ring r1"></div>
+                        <div class="ring r2"></div>
+                        <div class="ring r3"></div>
+                    </div>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                        <path d="M8 9V5.5a1.5 1.5 0 013 0V9m0 0V4.5a1.5 1.5 0 013 0V9m0 0V6.5a1.5 1.5 0 013 0V12a6 6 0 01-6 6h-1a5 5 0 01-5-5v-3.5a1.5 1.5 0 013 0V9"/>
+                    </svg>
+                    <p>Klik <strong>Mulai</strong> untuk mengaktifkan kamera</p>
+                </div>
+            </div>
+            <div id="scanLine" class="scan-line hidden"></div>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn" class="btn btn-primary" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                Mulai
+            </button>
+            <button id="stopBtn" class="btn btn-ghost" type="button" disabled>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                Hentikan
+            </button>
+            <button id="resetBtn" class="btn btn-outline" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 109-9 9 9 0 00-9 9m-1-4v4h4"/></svg>
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── Status Panel ─── -->
+    <aside class="status-panel">
+
+        <!-- Current Word -->
+        <div class="data-block">
+            <div class="block-header">
+                <span class="block-label">Deteksi Gerakan</span>
+                <span class="block-tag">LSTM</span>
+            </div>
+            <div id="currentWord" class="word-display muted">Menunggu input...</div>
+            <div class="conf-row">
+                <div class="conf-track">
+                    <div id="confBar" class="conf-fill"></div>
+                </div>
+                <span id="confVal" class="conf-val mono">0%</span>
+            </div>
+        </div>
+
+        <!-- Buffer Progress -->
+        <div class="data-block">
+            <div class="block-header">
+                <span class="block-label">Buffer Frame</span>
+                <span class="mono text-soft"><span id="bufferSize">0</span><span class="muted">/{{ config.LSTM_SEQUENCE_LENGTH }}</span></span>
+            </div>
+            <div id="bufferSegments" class="buffer-segments">
+                {% for i in range(config.LSTM_SEQUENCE_LENGTH) %}
+                <div class="seg" data-idx="{{ i }}"></div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sentence Output -->
+        <div class="data-block">
+            <div class="block-header">
+                <span class="block-label">Kalimat Terjemahan</span>
+                <button id="copySentenceBtn" class="icon-btn" title="Salin kalimat" disabled>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
+            </div>
+            <div class="sentence-box">
+                <p id="sentence" class="sentence-text muted">—</p>
+            </div>
+        </div>
+
+        <!-- Word History -->
+        <div class="data-block grow">
+            <div class="block-header">
+                <span class="block-label">Riwayat Kata</span>
+                <span id="historyCount" class="mono text-soft muted">0</span>
+            </div>
+            <ul id="history" class="word-chips">
+                <li class="chip-empty">Belum ada kata terdeteksi</li>
+            </ul>
+        </div>
+
+        <!-- Audio -->
+        <div class="data-block">
+            <div class="block-header">
+                <span class="block-label">Audio</span>
+                <label class="toggle-wrap">
+                    <input type="checkbox" id="autoplay" checked>
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                    <span class="toggle-text">Auto-play</span>
+                </label>
+            </div>
+            <audio id="player" controls></audio>
+        </div>
+
+    </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

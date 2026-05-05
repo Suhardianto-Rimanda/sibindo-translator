@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Panduan — SiBindo{% endblock %}
+
+{% block content %}
+<div class="prose-page">
+    <div class="prose-card">
+        <h2>Panduan Penggunaan</h2>
+
+        <h3>Cara Menggunakan</h3>
+        <div style="display:flex;flex-direction:column;gap:0">
+            <div class="guide-step">
+                <span class="step-num">01</span>
+                <div class="step-body">
+                    <div class="step-title">Siapkan Lingkungan</div>
+                    <div class="step-desc">Pastikan pencahayaan cukup dan merata. Hindari backlight kuat dari belakang. Gunakan latar belakang polos jika memungkinkan.</div>
+                </div>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">02</span>
+                <div class="step-body">
+                    <div class="step-title">Posisikan Diri</div>
+                    <div class="step-desc">Jarak optimal ke webcam: <strong>50–100 cm</strong>. Pastikan kedua tangan dan area dada masuk frame kamera.</div>
+                </div>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">03</span>
+                <div class="step-body">
+                    <div class="step-title">Mulai Kamera</div>
+                    <div class="step-desc">Klik tombol <strong>Mulai</strong> di halaman Penerjemah dan izinkan akses webcam pada browser.</div>
+                </div>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">04</span>
+                <div class="step-body">
+                    <div class="step-title">Lakukan Isyarat</div>
+                    <div class="step-desc">Peragakan gerakan BISINDO secara natural. Sistem mengumpulkan <strong>30 frame</strong> (~1 detik) per kata sebelum klasifikasi.</div>
+                </div>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">05</span>
+                <div class="step-body">
+                    <div class="step-title">Baca Hasil</div>
+                    <div class="step-desc">Kata terdeteksi muncul di panel kanan. Kalimat disusun otomatis. Audio diputar otomatis bila opsi <strong>Auto-play</strong> aktif.</div>
+                </div>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">06</span>
+                <div class="step-body">
+                    <div class="step-title">Reset bila Perlu</div>
+                    <div class="step-desc">Klik <strong>Reset</strong> untuk memulai kalimat baru atau jika hasil tidak akurat.</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Tips Akurasi</h3>
+        <ul>
+            <li>Lakukan gerakan dengan jelas, tidak terburu-buru.</li>
+            <li>Beri jeda singkat antar kata agar buffer ter-flush.</li>
+            <li>Variasikan pencahayaan dan jarak saat merekam dataset.</li>
+        </ul>
+    </div>
+
+    <div class="prose-card">
+        <h2>Indikator Sistem</h2>
+
+        <h3>Visual pada Kamera</h3>
+        <div class="indicator-list">
+            <div class="indicator-row">
+                <div class="ind-dot green"></div>
+                <span><strong>Kotak sudut hijau</strong> — area deteksi YOLOv8 (Region of Interest)</span>
+            </div>
+            <div class="indicator-row">
+                <div class="ind-dot teal"></div>
+                <span><strong>Titik &amp; garis teal</strong> — kerangka tangan kanan MediaPipe (21 landmark)</span>
+            </div>
+            <div class="indicator-row">
+                <div class="ind-dot cyan"></div>
+                <span><strong>Titik &amp; garis biru</strong> — kerangka tangan kiri MediaPipe</span>
+            </div>
+            <div class="indicator-row">
+                <div class="ind-dot red"></div>
+                <span><strong>Titik putih</strong> — ujung jari dan pergelangan tangan (landmark kunci)</span>
+            </div>
+        </div>
+
+        <h3>Panel Kanan</h3>
+        <div class="indicator-list">
+            <div class="indicator-row">
+                <div class="ind-dot teal"></div>
+                <span><strong>Pipeline Bar</strong> — setiap tahap menyala saat aktif memproses</span>
+            </div>
+            <div class="indicator-row">
+                <div class="ind-dot cyan"></div>
+                <span><strong>Buffer Segments</strong> — 30 kotak menunjukkan frame yang terkumpul</span>
+            </div>
+            <div class="indicator-row">
+                <div class="ind-dot green"></div>
+                <span><strong>Confidence Bar</strong> — tingkat keyakinan model LSTM saat klasifikasi</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

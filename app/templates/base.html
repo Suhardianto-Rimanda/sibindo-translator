@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SiBindo Translator{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                    <path d="M8 9V5.5a1.5 1.5 0 013 0V9m0 0V4.5a1.5 1.5 0 013 0V9m0 0V6.5a1.5 1.5 0 013 0V12a6 6 0 01-6 6h-1a5 5 0 01-5-5v-3.5a1.5 1.5 0 013 0V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>SiBindo</h1>
+                <p>Sign Language Translator</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('main.index') }}" class="nav-link {% if active == 'penerjemah' %}active{% endif %}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="9" height="9" rx="1.5"/><rect x="13" y="3" width="9" height="9" rx="1.5"/><rect x="2" y="14" width="9" height="7" rx="1.5"/><rect x="13" y="14" width="9" height="7" rx="1.5"/></svg>
+                Penerjemah
+            </a>
+            <a href="{{ url_for('main.panduan') }}" class="nav-link {% if active == 'panduan' %}active{% endif %}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v1m0 4v5"/></svg>
+                Panduan
+            </a>
+            <a href="{{ url_for('main.tentang') }}" class="nav-link {% if active == 'tentang' %}active{% endif %}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5m-7 0h5M12 12l-4.5 4.5m7 0h-5"/></svg>
+                Tentang
+            </a>
+        </nav>
+        <div id="statusPill" class="status-pill idle">
+            <span class="status-dot"></span>
+            <span id="statusText" class="status-text">Siap</span>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <span>SiBindo Translator</span>
+        <span class="footer-sep">·</span>
+        <span>Tugas Akhir D-III Teknik Informatika</span>
+        <span class="footer-sep">·</span>
+        <span>Politeknik Negeri Bengkalis &copy; 2026</span>
+    </footer>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

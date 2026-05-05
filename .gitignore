@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+credentials.json
+service-account*.json
+gcp-key*.json
+aws-credentials
+.aws/
+.gcloud/
+*.sqlite
+*.sqlite3
+*.db
+
+# API tokens / config dumps
+*.token
+*token.txt
+*api_key*
+*apikey*
+.netrc
+.npmrc
+.pypirc
+
+# Logs
+*.log
+logs/
+
+# Models / weights (large + sometimes proprietary)
+models/yolov8/*.pt
+models/lstm/*.h5
+models/lstm/*.json
+models/mediapipe/*.task
+!models/**/.gitkeep
+
+# Datasets
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+
+# Generated audio
+app/static/audio/*.mp3
+!app/static/audio/.gitkeep
+
+# Training artifacts
+runs/
+*.ckpt
+*.pth
+*.onnx
+*.tflite
+
+# Editor / OS
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code local
+.claude/settings.local.json
+CLAUDE.md

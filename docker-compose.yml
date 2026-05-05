@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    container_name: sibindo-translator
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./models:/app/models:ro
+      - ./app/static/audio:/app/app/static/audio
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
